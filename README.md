@@ -42,7 +42,3 @@ In another ternimal run
 - [@Krishna Chaitanya](https://github.com/Krishna752006)
 - [@Guru Charan](https://github.com/gcrn2318)
 - [@Lokesh](https://github.com/LokeshVasireddy)
-- [@Srinidhi](https://github.com/rsrinidhii)
-- [@Riya](https://github.com/ria99-sudo)
-- [@Meghana](https://github.com/MeghanaJangala)
-- [@Aasrith](https://github.com/AASRITHCODER)
