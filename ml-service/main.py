@@ -18,7 +18,6 @@ def health():
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(data: PredictionRequest):
-    
     return {
         "prediction": data.team1,
         "probability": 0.65
