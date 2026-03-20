@@ -14,3 +14,6 @@ repos:
     hooks:
       - id: eslint
         files: ^frontend/.*\.(js|jsx|ts|tsx)$
+
+
+#files: ^(frontend|backend)/.*\.(js|jsx|ts|tsx)$
