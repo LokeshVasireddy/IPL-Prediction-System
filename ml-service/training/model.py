@@ -5,8 +5,11 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+import math
+import threading
+import pickle
+from tensorflow import keras
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from tensorflow import keras
@@ -27,17 +30,17 @@ CORS(
 data = pd.read_csv("../data/data1.csv")
 data.drop(["Unnamed: 0"], axis=1, inplace=True)
 
-input_features = ["batting_team", "bowling_team", "venue"]
-encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
-encoded_categorical = encoder.fit_transform(data[input_features])
+input_features = ['batting_team', 'bowling_team', 'venue']
+encoder = OneHotEncoder()
+encoded_categorical = encoder.transform(data[input_features])
 
 xfeats = ["over", "ball"]
 scalerx = StandardScaler()
-scaled_x = scalerx.fit_transform(data[xfeats])
+scaled_x = scalerx.transform(data[xfeats])
 
 yfeats = ["runs", "wickets"]
 scalery = StandardScaler()
-scaled_y = scalery.fit_transform(data[yfeats])
+scaled_y = scalery.transform(data[yfeats])
 
 model = keras.models.load_model("../models/lstm1.keras")
 
@@ -88,9 +91,9 @@ def train_model_with_new_data(batfirst, batsecond):
         df = pd.concat([data, batfirst, batsecond], ignore_index=True)
         df.to_csv("data1.csv", index=False)
 
-        encoded_categorical = encoder.fit_transform(df[input_features])
-        scaled_x = scalerx.fit_transform(df[xfeats])
-        scaled_y = scalery.fit_transform(df[yfeats])
+        encoded_categorical = encoder.transform(df[input_features])
+        scaled_x = scalerx.transform(df[xfeats])
+        scaled_y = scalery.transform(df[yfeats])
 
         X = np.hstack((encoded_categorical, scaled_x))
         X = X.reshape(X.shape[0], 1, X.shape[1])

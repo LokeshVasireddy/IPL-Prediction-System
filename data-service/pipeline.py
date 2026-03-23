@@ -6,7 +6,8 @@ import pandas as pd
 from features import build_features
 from ingest import load_data
 from split import split_data
-
+import config
+from metadata import save_metadata
 
 def run_pipeline():
     # 1. Load
@@ -22,12 +23,14 @@ def run_pipeline():
 
     # 4. Save processed dataset (simple version)
     os.makedirs(os.path.dirname(config.OUTPUT_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(config.METADATA_PATH), exist_ok=True)
 
     df_out = pd.DataFrame(X)
     df_out["y_runs"] = y[:, 0]
     df_out["y_wickets"] = y[:, 1]
 
     df_out.to_parquet(config.OUTPUT_PATH)
+    save_metadata(df_out, config)
 
     print("Pipeline completed")
     print("Saved to:", config.OUTPUT_PATH)

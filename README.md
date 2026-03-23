@@ -5,6 +5,10 @@ Project Based on Interview -->
 1. https://www.instagram.com/reel/DU5jBV3k2d-/
 2. https://www.instagram.com/p/DUx1P8miqmr
 
+mlflow ui --backend-store-uri sqlite:///experiments/mlruns.db --port 5000
+
+“I built a versioned ML artifact system with controlled promotion to production”
+
 # IPL Prediction System using LSTM
 
 Developing a web application to predict outcomes of IPL cricket matches using historical match data. This system will use the MERN stack for the web application and integrate Deep Learning (DL) models like LSTM and RNN for the prediction functionality.
@@ -48,3 +52,12 @@ In another ternimal run
 - [@Krishna Chaitanya](https://github.com/Krishna752006)
 - [@Guru Charan](https://github.com/gcrn2318)
 - [@Lokesh](https://github.com/LokeshVasireddy)
+
+### 3.5 Known Observations & Potential Improvements
+
+- **No CLI arguments** — hyperparameters require direct file edits. Consider `argparse` or a config YAML.
+- **Hardcoded data path** — `./data/data1.csv` assumes script is run from `ml-service/`. Will break if CWD differs.
+- **No early stopping** — fixed epoch count only; no `EarlyStopping` or learning rate scheduling.
+- **Hardcoded validation thresholds** — `MAE < 0.35` and `R2 > 0.70` are inline constants; externalising them would help CI/CD pipelines.
+- **Silent exception handling** — the entire training block is wrapped in a broad `try/except` that only prints the error. Failed MLflow runs are not explicitly marked as `FAILED`.
+- **mlruns cleanup workaround** — the stray folder merge is a symptom of an MLflow tracking URI config issue; worth fixing at the source.

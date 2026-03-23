@@ -34,3 +34,10 @@
 **/yarn-error.log*
 
 **/Thumbs.db
+**/mlflow.db
+**/mlruns.db
+**/mlruns/
+**/.pytest_cache/
+
+**/logs/
+**/.logs

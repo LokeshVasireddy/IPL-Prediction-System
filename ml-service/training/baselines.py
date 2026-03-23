@@ -7,11 +7,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.tree import DecisionTreeRegressor
-from xgboost import XGBRegressor
 
-print("Started training...")
+print("Started training baselines...")
 
 # -----------------------------
 # LOAD DATA
@@ -23,23 +20,21 @@ xfeats = ["over", "ball"]
 yfeats = ["runs", "wickets"]
 
 # -----------------------------
-# ENCODE + SCALE
+# PREPROCESS (SELF-CONTAINED)
 # -----------------------------
-encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
-encoded_categorical = encoder.fit_transform(data[input_features])
-
+encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
 scalerx = StandardScaler()
-scaled_x = scalerx.fit_transform(data[xfeats])
-
 scalery = StandardScaler()
+
+encoded_categorical = encoder.fit_transform(data[input_features])
+scaled_x = scalerx.fit_transform(data[xfeats])
 scaled_y = scalery.fit_transform(data[yfeats])
 
-# Final feature matrix
 X = np.hstack((encoded_categorical, scaled_x))
 y = scaled_y
 
 # -----------------------------
-# TRAIN / TEST SPLIT
+# SPLIT
 # -----------------------------
 X_train_full, X_test, y_train_full, y_test = train_test_split(
     X, y, test_size=0.1, random_state=42
@@ -52,27 +47,19 @@ X_train, X_val, y_train, y_val = train_test_split(
 # -----------------------------
 # EVALUATION FUNCTION
 # -----------------------------
-
-
-def evaluate_model(name, model, X_train, y_train, X_test, y_test, scalery):
+def evaluate_model(name, model):
 
     model.fit(X_train, y_train)
 
-    # -----------------------------
-    # LATENCY MEASUREMENT
-    # -----------------------------
+    # latency
     start_time = time.time()
-
     y_pred = model.predict(X_test)
-
     end_time = time.time()
 
     total_latency_ms = (end_time - start_time) * 1000
-    avg_latency_per_sample = total_latency_ms / X_test.shape[0]
+    avg_latency = total_latency_ms / X_test.shape[0]
 
-    # -----------------------------
-    # METRICS
-    # -----------------------------
+    # metrics (REAL SCALE)
     y_pred_real = scalery.inverse_transform(y_pred)
     y_test_real = scalery.inverse_transform(y_test)
 
@@ -83,20 +70,17 @@ def evaluate_model(name, model, X_train, y_train, X_test, y_test, scalery):
 
     n = X_test.shape[0]
     p = X_test.shape[1]
-
     adjusted_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
 
     return {
         "Model": name,
-        "MSE": mse,
-        "MAE": mae,
         "RMSE": rmse,
+        "MAE": mae,
         "R2": r2,
-        "Adjusted_R2": adjusted_r2,
-        "Total_Latency_ms": total_latency_ms,
-        "Latency_per_sample_ms": avg_latency_per_sample,
+        "Adj_R2": adjusted_r2,
+        "Latency(ms)": total_latency_ms,
+        "Per_Sample(ms)": avg_latency
     }
-
 
 # -----------------------------
 # MODELS
@@ -119,21 +103,14 @@ models = {
 }
 
 # -----------------------------
-# RUN ALL MODELS
+# RUN
 # -----------------------------
 results = []
 
 for name, model in models.items():
-    result = evaluate_model(name, model, X_train, y_train, X_test, y_test, scalery)
-    results.append(result)
+    results.append(evaluate_model(name, model))
 
-# -----------------------------
-# LEADERBOARD
-# -----------------------------
-results_df = pd.DataFrame(results)
-
-# sort by RMSE (best first)
-results_df = results_df.sort_values(by="RMSE")
+results_df = pd.DataFrame(results).sort_values(by="RMSE")
 
 print("\nMODEL LEADERBOARD:\n")
 print(results_df.to_string(index=False))
