@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 
 ML_SERVICE_DIR = os.path.dirname(os.path.dirname(__file__))

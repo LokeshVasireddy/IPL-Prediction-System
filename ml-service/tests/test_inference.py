@@ -1,6 +1,7 @@
 import pickle
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 PRODUCTION_DIR = BASE_DIR / "models" / "production"

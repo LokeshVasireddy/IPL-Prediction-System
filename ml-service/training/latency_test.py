@@ -1,4 +1,5 @@
 import time
+
 import pandas as pd
 from core.model_loader import load_latest_model
 

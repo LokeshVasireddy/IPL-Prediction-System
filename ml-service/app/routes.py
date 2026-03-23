@@ -1,6 +1,6 @@
-from fastapi import APIRouter
-from app.schema import PredictionRequest, PredictionResponse
 from app.inference import run_prediction
+from app.schema import PredictionRequest, PredictionResponse
+from fastapi import APIRouter
 
 router = APIRouter()
 

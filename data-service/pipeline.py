@@ -5,9 +5,8 @@ import numpy as np
 import pandas as pd
 from features import build_features
 from ingest import load_data
-from split import split_data
-import config
 from metadata import save_metadata
+from split import split_data
 
 
 def run_pipeline():

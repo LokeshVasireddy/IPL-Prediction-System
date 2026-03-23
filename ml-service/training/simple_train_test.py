@@ -1,23 +1,20 @@
-from core.model_bundle import IPLModelBundle
-from core.registry import promote_model
-from core.config_loader import load_config
-from core.logger import setup_logger
-
 import argparse
-import pickle
 import os
-import shutil
+import pickle
 import random
+import shutil
 
-import numpy as np
-import pandas as pd
 import mlflow
 import mlflow.tensorflow
-
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from core.config_loader import load_config
+from core.logger import setup_logger
+from core.model_bundle import IPLModelBundle
+from core.registry import promote_model
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
-
-import tensorflow as tf
 from tensorflow import keras
 
 # -----------------------------
