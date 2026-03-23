@@ -24,12 +24,7 @@ from tensorflow import keras
 # CLI
 # -----------------------------
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--config",
-    type=str,
-    required=True,
-    help="Path to config file"
-)
+parser.add_argument("--config", type=str, required=True, help="Path to config file")
 
 args = parser.parse_args()
 config = load_config(args.config)
@@ -103,17 +98,12 @@ if not os.path.exists(DATA_PATH):
     raise FileNotFoundError(f"Dataset not found: {DATA_PATH}")
 
 metadata_path = os.path.join(
-    ML_SERVICE_DIR,
-    "data",
-    "metadata",
-    f"{DATASET_VERSION}.json"
+    ML_SERVICE_DIR, "data", "metadata", f"{DATASET_VERSION}.json"
 )
 
 if not os.path.exists(metadata_path):
     logger.error(f"Metadata missing for dataset {DATASET_VERSION}")
-    raise FileNotFoundError(
-        f"Metadata not found for dataset {DATASET_VERSION}"
-    )
+    raise FileNotFoundError(f"Metadata not found for dataset {DATASET_VERSION}")
 
 if DATA_PATH.endswith(".parquet"):
     df = pd.read_parquet(DATA_PATH)
@@ -166,17 +156,11 @@ with mlflow.start_run():
         # SPLIT
         # -----------------------------
         X_train_full, X_test, y_train_full, y_test = train_test_split(
-            X,
-            y,
-            test_size=TEST_SIZE,
-            random_state=SEED
+            X, y, test_size=TEST_SIZE, random_state=SEED
         )
 
         X_train, X_val, y_train, y_val = train_test_split(
-            X_train_full,
-            y_train_full,
-            test_size=VAL_SIZE,
-            random_state=SEED
+            X_train_full, y_train_full, test_size=VAL_SIZE, random_state=SEED
         )
 
         logger.info("Data split completed")
@@ -192,28 +176,28 @@ with mlflow.start_run():
         logger.info(f"LSTM1: {LSTM1_UNITS}, LSTM2: {LSTM2_UNITS}")
         logger.info(f"Dense layers: {DENSE1}, {DENSE2}")
 
-        model = keras.Sequential([
-            keras.layers.Input(shape=(1, X.shape[2])),
-            keras.layers.LSTM(LSTM1_UNITS, return_sequences=True),
-            keras.layers.LSTM(LSTM2_UNITS),
-            keras.layers.Dense(DENSE1, activation='relu'),
-            keras.layers.Dense(DENSE2, activation='relu'),
-            keras.layers.Dense(2)
-        ])
-
-        optimizer = keras.optimizers.Adam(
-            learning_rate=LEARNING_RATE
+        model = keras.Sequential(
+            [
+                keras.layers.Input(shape=(1, X.shape[2])),
+                keras.layers.LSTM(LSTM1_UNITS, return_sequences=True),
+                keras.layers.LSTM(LSTM2_UNITS),
+                keras.layers.Dense(DENSE1, activation="relu"),
+                keras.layers.Dense(DENSE2, activation="relu"),
+                keras.layers.Dense(2),
+            ]
         )
+
+        optimizer = keras.optimizers.Adam(learning_rate=LEARNING_RATE)
 
         model.compile(
             optimizer=optimizer,
-            loss='mean_squared_error',
+            loss="mean_squared_error",
             metrics=[
-                'mae',
-                'mse',
-                tf.keras.metrics.RootMeanSquaredError(name='rmse'),
-                tf.keras.metrics.R2Score(name='r2')
-            ]
+                "mae",
+                "mse",
+                tf.keras.metrics.RootMeanSquaredError(name="rmse"),
+                tf.keras.metrics.R2Score(name="r2"),
+            ],
         )
 
         # -----------------------------
@@ -227,7 +211,7 @@ with mlflow.start_run():
             epochs=EPOCHS,
             batch_size=BATCH_SIZE,
             validation_data=(X_val, y_val),
-            verbose=1
+            verbose=1,
         )
 
         logger.info("Training completed")
@@ -237,7 +221,7 @@ with mlflow.start_run():
         bundle = IPLModelBundle(
             model=model,
             dataset_version=DATASET_VERSION,
-            feature_version=FEATURE_VERSION
+            feature_version=FEATURE_VERSION,
         )
 
         run_id = mlflow.active_run().info.run_id[:6]
@@ -262,10 +246,10 @@ with mlflow.start_run():
         # -----------------------------
         # TRAIN METRICS
         # -----------------------------
-        mlflow.log_metric("train_loss", history.history['loss'][-1])
-        mlflow.log_metric("val_loss", history.history['val_loss'][-1])
-        mlflow.log_metric("train_mae", history.history['mae'][-1])
-        mlflow.log_metric("val_mae", history.history['val_mae'][-1])
+        mlflow.log_metric("train_loss", history.history["loss"][-1])
+        mlflow.log_metric("val_loss", history.history["val_loss"][-1])
+        mlflow.log_metric("train_mae", history.history["mae"][-1])
+        mlflow.log_metric("val_mae", history.history["val_mae"][-1])
 
         # -----------------------------
         # TEST
@@ -308,11 +292,7 @@ with mlflow.start_run():
         # FIX MLRUNS LOCATION
         # -----------------------------
         stray_mlruns = os.path.join(ML_SERVICE_DIR, "mlruns")
-        target_mlruns = os.path.join(
-            ML_SERVICE_DIR,
-            "experiments",
-            "mlruns"
-        )
+        target_mlruns = os.path.join(ML_SERVICE_DIR, "experiments", "mlruns")
 
         if os.path.exists(stray_mlruns):
 
@@ -358,7 +338,7 @@ with mlflow.start_run():
                 model_type=MODEL_TYPE,
                 dataset_version=DATASET_VERSION,
                 feature_version=FEATURE_VERSION,
-                run_id=run_id
+                run_id=run_id,
             )
 
             logger.info("Model promotion completed")

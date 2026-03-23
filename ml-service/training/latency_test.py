@@ -15,7 +15,7 @@ input_data = {
     "bowling_team": "Chennai Super Kings",
     "venue": "Wankhede Stadium",
     "over": 10,
-    "ball": 3
+    "ball": 3,
 }
 
 df = pd.DataFrame([input_data])

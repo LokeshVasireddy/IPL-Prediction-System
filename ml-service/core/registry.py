@@ -69,10 +69,7 @@ def promote_model(model_name, model_type, dataset_version, feature_version, run_
         if os.path.exists(old_model_path):
             logger.info(f"Moving old model to history: {old_model}")
 
-            shutil.move(
-                old_model_path,
-                os.path.join(HISTORY_DIR, old_model)
-            )
+            shutil.move(old_model_path, os.path.join(HISTORY_DIR, old_model))
 
     # ----------------------------
     # move new model to production
@@ -99,7 +96,7 @@ def promote_model(model_name, model_type, dataset_version, feature_version, run_
         "feature_version": feature_version,
         "stage": "production",
         "source": "staging",
-        "promoted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "promoted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     with open(metadata_file, "w") as f:

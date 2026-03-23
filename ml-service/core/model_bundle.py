@@ -1,12 +1,8 @@
 import numpy as np
 
+
 class IPLModelBundle:
-    def __init__(
-        self,
-        model,
-        dataset_version: str,
-        feature_version: str
-    ):
+    def __init__(self, model, dataset_version: str, feature_version: str):
         self.model = model
         self.dataset_version = dataset_version
         self.feature_version = feature_version
@@ -35,5 +31,5 @@ class IPLModelBundle:
     def info(self):
         return {
             "dataset_version": self.dataset_version,
-            "feature_version": self.feature_version
+            "feature_version": self.feature_version,
         }

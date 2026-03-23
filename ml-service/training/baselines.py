@@ -22,7 +22,7 @@ yfeats = ["runs", "wickets"]
 # -----------------------------
 # PREPROCESS (SELF-CONTAINED)
 # -----------------------------
-encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
 scalerx = StandardScaler()
 scalery = StandardScaler()
 
@@ -43,6 +43,7 @@ X_train_full, X_test, y_train_full, y_test = train_test_split(
 X_train, X_val, y_train, y_val = train_test_split(
     X_train_full, y_train_full, test_size=0.2, random_state=42
 )
+
 
 # -----------------------------
 # EVALUATION FUNCTION
@@ -79,8 +80,9 @@ def evaluate_model(name, model):
         "R2": r2,
         "Adj_R2": adjusted_r2,
         "Latency(ms)": total_latency_ms,
-        "Per_Sample(ms)": avg_latency
+        "Per_Sample(ms)": avg_latency,
     }
+
 
 # -----------------------------
 # MODELS

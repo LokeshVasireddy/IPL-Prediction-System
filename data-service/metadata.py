@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 
+
 def save_metadata(df, config):
     metadata = {
         "dataset_version": config.DATASET_VERSION,
@@ -10,10 +11,7 @@ def save_metadata(df, config):
         "features": config.INPUT_FEATURES + config.X_FEATS,
         "target": config.Y_FEATS,
         "raw_source": config.RAW_PATH,
-        "preprocessing": [
-            "onehot_encoding",
-            "standard_scaling"
-        ]
+        "preprocessing": ["onehot_encoding", "standard_scaling"],
     }
 
     os.makedirs(os.path.dirname(config.METADATA_PATH), exist_ok=True)

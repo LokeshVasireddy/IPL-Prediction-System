@@ -9,6 +9,7 @@ from split import split_data
 import config
 from metadata import save_metadata
 
+
 def run_pipeline():
     # 1. Load
     df = load_data(config.RAW_PATH)

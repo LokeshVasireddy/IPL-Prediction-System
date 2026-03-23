@@ -30,7 +30,7 @@ CORS(
 data = pd.read_csv("../data/data1.csv")
 data.drop(["Unnamed: 0"], axis=1, inplace=True)
 
-input_features = ['batting_team', 'bowling_team', 'venue']
+input_features = ["batting_team", "bowling_team", "venue"]
 encoder = OneHotEncoder()
 encoded_categorical = encoder.transform(data[input_features])
 

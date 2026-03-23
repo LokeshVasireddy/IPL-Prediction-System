@@ -4,7 +4,6 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from datetime import datetime, timedelta
 
-
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -55,10 +54,7 @@ def setup_logger(name: str):
     log_file = logs_dir / "ml_service.log"
 
     file_handler = TimedRotatingFileHandler(
-        log_file,
-        when="midnight",
-        interval=1,
-        backupCount=LOG_RETENTION_DAYS
+        log_file, when="midnight", interval=1, backupCount=LOG_RETENTION_DAYS
     )
 
     file_handler.suffix = "%Y-%m-%d.log"
