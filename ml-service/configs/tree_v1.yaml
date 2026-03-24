@@ -1,0 +1,49 @@
+experiment:
+  name: tree_v1
+
+data:
+  path: data/processed/v2_alpha/dataset.parquet
+  dataset_version: v2_alpha
+  feature_version: tree_features_v1
+  test_size: 0.1
+  random_seed: 42
+
+# ---------------------------------------------------------------
+# MODEL TYPE: choose one of DECISION_TREE | RANDOM_FOREST | XGBOOST
+# Uncomment the block you want and comment out the others.
+# ---------------------------------------------------------------
+
+# --- DECISION_TREE ---
+model:
+  type: DECISION_TREE
+  max_depth: 25
+  min_samples_split: 15
+  min_samples_leaf: 7
+
+# --- RANDOM_FOREST ---
+# model:
+#   type: RANDOM_FOREST
+#   n_estimators: 200
+#   max_depth: 15
+#   min_samples_split: 5
+#   min_samples_leaf: 2
+#   n_jobs: -1
+
+# --- XGBOOST ---
+# model:
+#   type: XGBOOST
+#   n_estimators: 300
+#   max_depth: 6
+#   learning_rate: 0.05
+#   subsample: 0.8
+#   colsample_bytree: 0.8
+#   n_jobs: -1
+
+validation_gate:
+  test_mae: 0.2
+  test_r2: 0.82
+
+paths:
+  staging_dir: models/staging
+  production_dir: models/production
+  mlflow_db: experiments/mlruns.db
