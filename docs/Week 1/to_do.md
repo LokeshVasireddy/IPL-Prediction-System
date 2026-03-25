@@ -2,8 +2,6 @@
 
 > **Legend:** ✅ Done | 🔜 Planned | ⚠️ Open (not yet decided)
 
----
-
 ## 1. Architecture & System Design
 
 - ✅ Microservices architecture
@@ -16,13 +14,10 @@
 - 🔜 Data ingestion service
 - 🔜 Analytics service
 - 🔜 Database service
-- 🔜 OpenAPI contracts
 - 🔜 System architecture diagram
 - 🔜 Data flow diagram
 - 🔜 Deployment architecture diagram
 - ⚠️ Cache service — Redis decision pending
-
----
 
 ## 2. Backend Engineering
 
@@ -43,8 +38,6 @@
 - 🔜 API versioning
 - 🔜 Secrets management
 - 🔜 Centralized config system
-
----
 
 ## 3. Frontend Engineering
 
@@ -71,8 +64,6 @@
 - 🔜 Ball-by-ball simulation output display
 - 🔜 Production build optimization
 
----
-
 ## 4. Data Engineering
 
 - ✅ Dataset v1 pipeline (CSV → Parquet)
@@ -95,8 +86,6 @@
 - 🔜 Data schema documentation (`docs/feature_spec.md`)
 - 🔜 Data quality checks
 - ⚠️ Multiple external data sources — not yet decided
-
----
 
 ## 5. ML Engineering
 
@@ -128,8 +117,6 @@
 - 🔜 End-to-end simulation validation (outputs produce realistic IPL scores)
 - ⚠️ LightGBM model — not yet decided if needed
 
----
-
 ## 6. MLOps
 
 - ✅ MLflow experiment tracking
@@ -145,8 +132,6 @@
 - 🔜 Model version control (full lifecycle)
 - 🔜 Pipeline documentation
 - 🔜 Drift detection
-
----
 
 ## 7. Database & Storage
 
@@ -166,15 +151,11 @@
 - 🔜 Cloud storage for datasets
 - ⚠️ MongoDB vs PostgreSQL — not yet decided
 
----
-
 ## 8. Caching
 
 - 🔜 Redis setup
 - 🔜 Prediction caching (cache simulation results)
 - 🔜 Analytics caching
-
----
 
 ## 9. Subscription & Payments
 
@@ -183,8 +164,6 @@
 - 🔜 Payment integration (full)
 - 🔜 User account system (linked to tier)
 - 🔜 Access control per feature (simulation, custom teams, season sim)
-
----
 
 ## 10. DevOps & Infrastructure
 
@@ -202,8 +181,6 @@
 - 🔜 Static frontend hosting
 - 🔜 Kubernetes deployment
 
----
-
 ## 11. Monitoring & Reliability
 
 - ✅ Structured logging (file + console, environment-aware)
@@ -215,8 +192,6 @@
 - 🔜 System health monitoring (per service)
 - ⚠️ Alerts — not yet decided
 - ⚠️ Monitoring dashboard — not yet decided
-
----
 
 ## 12. Security
 
@@ -231,8 +206,6 @@
 - 🔜 Secure headers
 - 🔜 Input validation (all endpoints)
 
----
-
 ## 13. Testing
 
 - ✅ ML unit tests (6 passing — pipeline, bundle, inference, registry)
@@ -242,8 +215,6 @@
 - 🔜 Backend unit tests
 - 🔜 API integration tests
 - 🔜 Coverage reports
-
----
 
 ## 14. Documentation
 
@@ -259,8 +230,6 @@
 - 🔜 Model explanation docs
 - 🔜 Project vision document
 
----
-
 ## 15. Product & Recruiter Signal
 
 - ✅ Clean GitHub repo
@@ -275,8 +244,6 @@
 - 🔜 Screenshots
 - 🔜 Performance metrics writeup
 - 🔜 System design explanation
-
----
 
 ## 16. Team Workflow
 
