@@ -37,3 +37,16 @@ MONGO_URI=mongodb://mongo:27017/ipl_db
 Supports local Docker Mongo and Atlas. API docs at `/docs`.
 
 > ⚠️ Prediction logic is a placeholder — ready for real model integration.
+
+Errors
+-------
+Errors Encountered:
+
+- ModuleNotFoundError: No module named 'pymongo'
+  → Backend service crashed because required dependency was missing
+  
+- 404 Not Found for /db-check
+  → Docker container was running old code (image not rebuilt)
+
+- SSL handshake failed (MongoDB Atlas)
+  → TLS verification issue inside Docker, fixed using certifi
