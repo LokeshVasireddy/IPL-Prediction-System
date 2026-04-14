@@ -4,10 +4,12 @@ import time
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from lightgbm import LGBMRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.multioutput import MultiOutputRegressor
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
 from tensorflow import keras
@@ -25,7 +27,7 @@ xfeats = ["over", "ball"]
 yfeats = ["runs", "wickets"]
 
 # -----------------------------
-# PREPROCESS (SELF-CONTAINED)
+# PREPROCESS
 # -----------------------------
 encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
 scalerx = StandardScaler()
@@ -51,7 +53,7 @@ X_train, X_val, y_train, y_val = train_test_split(
 
 
 # -----------------------------
-# EVALUATION FUNCTION (sklearn)
+# EVALUATION FUNCTION
 # -----------------------------
 def evaluate_model(name, model):
 
@@ -97,14 +99,12 @@ LAYER2_UNITS = 50
 DENSE1 = 10
 DENSE2 = 10
 
-# Reshape X for recurrent models: (samples, timesteps=1, features)
 X_train_seq = X_train.reshape((X_train.shape[0], 1, X_train.shape[1]))
 X_val_seq = X_val.reshape((X_val.shape[0], 1, X_val.shape[1]))
 X_test_seq = X_test.reshape((X_test.shape[0], 1, X_test.shape[1]))
 
 
 def get_recurrent_layer(model_type, units, return_sequences):
-    """Return the appropriate Keras recurrent layer."""
     if model_type == "LSTM":
         return keras.layers.LSTM(units, return_sequences=return_sequences)
     elif model_type == "GRU":
@@ -116,12 +116,11 @@ def get_recurrent_layer(model_type, units, return_sequences):
 
 
 def build_recurrent_model(model_type):
-    """Build a two-layer recurrent model followed by dense layers."""
     model = keras.Sequential(
         [
             keras.layers.Input(shape=(1, X_train.shape[1])),
-            get_recurrent_layer(model_type, LAYER1_UNITS, return_sequences=True),
-            get_recurrent_layer(model_type, LAYER2_UNITS, return_sequences=False),
+            get_recurrent_layer(model_type, LAYER1_UNITS, True),
+            get_recurrent_layer(model_type, LAYER2_UNITS, False),
             keras.layers.Dense(DENSE1, activation="relu"),
             keras.layers.Dense(DENSE2, activation="relu"),
             keras.layers.Dense(2),
@@ -132,21 +131,15 @@ def build_recurrent_model(model_type):
 
 
 def evaluate_recurrent_model(model_type):
-    """Train and evaluate a recurrent model, returning a metrics dict."""
-    print(f"  Training {model_type}...")
+    print(f"Training {model_type}...")
     model = build_recurrent_model(model_type)
-
-    early_stop = keras.callbacks.EarlyStopping(
-        monitor="val_loss", patience=5, restore_best_weights=True
-    )
 
     model.fit(
         X_train_seq,
         y_train,
         validation_data=(X_val_seq, y_val),
         epochs=10,
-        batch_size=1048,
-        callbacks=[early_stop],
+        batch_size=1000,
         verbose=0,
     )
 
@@ -158,7 +151,7 @@ def evaluate_recurrent_model(model_type):
     total_latency_ms = (end_time - start_time) * 1000
     avg_latency = total_latency_ms / X_test_seq.shape[0]
 
-    # metrics (REAL SCALE)
+    # metrics
     y_pred_real = scalery.inverse_transform(y_pred)
     y_test_real = scalery.inverse_transform(y_test)
 
@@ -168,7 +161,7 @@ def evaluate_recurrent_model(model_type):
     r2 = r2_score(y_test_real, y_pred_real)
 
     n = X_test_seq.shape[0]
-    p = X_test_seq.shape[1] * X_test_seq.shape[2]  # flattened feature count
+    p = X_test_seq.shape[1] * X_test_seq.shape[2]
     adjusted_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
 
     return {
@@ -183,7 +176,7 @@ def evaluate_recurrent_model(model_type):
 
 
 # -----------------------------
-# SKLEARN MODELS
+# MODELS
 # -----------------------------
 models = {
     "Linear Regression": LinearRegression(),
@@ -191,24 +184,41 @@ models = {
     "Random Forest": RandomForestRegressor(
         n_estimators=200, max_depth=12, random_state=42, n_jobs=-1
     ),
-    "XGBoost": XGBRegressor(
-        n_estimators=300,
-        learning_rate=0.05,
-        max_depth=6,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        random_state=42,
-        n_jobs=-1,
+    "XGBoost": MultiOutputRegressor(
+        XGBRegressor(
+            n_estimators=300,
+            learning_rate=0.05,
+            max_depth=6,
+            subsample=0.8,
+            colsample_bytree=0.8,
+            random_state=42,
+            n_jobs=-1,
+        )
+    ),
+    "LightGBM": MultiOutputRegressor(
+        LGBMRegressor(
+            n_estimators=300,
+            learning_rate=0.05,
+            num_leaves=31,
+            subsample=0.8,
+            colsample_bytree=0.8,
+            random_state=42,
+            n_jobs=-1,
+        )
     ),
 }
 
+# -----------------------------
+# TRAIN
+# -----------------------------
 results = []
 
 for name, model in models.items():
+    print(f"Training {name}...")
     results.append(evaluate_model(name, model))
 
 # -----------------------------
-# RECURRENT MODELS
+# RNN MODELS
 # -----------------------------
 for rnn_type in ["LSTM", "GRU", "RNN"]:
     results.append(evaluate_recurrent_model(rnn_type))

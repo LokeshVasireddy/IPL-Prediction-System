@@ -1,6 +1,6 @@
 # IPL Cricket Intelligence Platform — Feature Specification
 
-**Scope**: IPL Only | **Format**: T20 (20 overs per innings)
+**Scope**: IPL Only | **Format**: T20 (20 overs per inning)
 
 ## Executive Summary
 
@@ -18,20 +18,20 @@ ML-powered cricket intelligence platform for IPL T20 matches with:
 
 | Feature | Type | Raw Range | Normalization | Notes |
 |---------|------|-----------|---------------|-------|
-| `innings` | int | 0 - 1 | None | Categorical identifier |
+| `inning` | int | 0 - 1 | None | Categorical identifier |
 | `over` | int | 1 - 20 | `over / 20` | Normalized to [0.05, 1.0] |
 | `sin_ball` | float | -1 to 1 | `sin(2π × ball / 6)` | Cyclic encoding of ball position |
 | `cos_ball` | float | -1 to 1 | `cos(2π × ball / 6)` | Cyclic encoding of ball position |
 | `balls_remaining` | int | 0 - 120 | `balls_remaining / 120` | Normalized to [0, 1]|
 | `current_score` | int | 0 - 300 | **TBD**: min-max / ÷100 / ÷200 | Test during training |
 | `wickets_fallen` | int | 0 - 10 | `wickets_fallen / 10` | Normalized to [0, 1] |
-| `target` | int | 0 - 300 | Same as `current_score` | 0 for innings 1 |
+| `target` | int | 0 - 300 | Same as `current_score` | 0 for inning 1 |
 | `phase` | categorical | 3 classes | One-hot encoding | powerplay/middle/death |
 
 **Notes**
 - **Formulae**: balls_remaining = (20 - current_over) * 6 - current_ball
 - **For Phase**: 0: powerplay (1 - 6 overs) / 1: middle (7-15 overs)/ 2: death (16 - 20 overs)
-- **Innings Switch**: Acts as a binary switch to zero out chase weights.
+- **inning Switch**: Acts as a binary switch to zero out chase weights.
 - **Ball Encoding Rationale**: Using `sin_ball` and `cos_ball` instead of raw `ball` captures the cyclic nature (ball 6 → ball 1 transition) and ensures smooth gradients.
 
 ### 1.2 Extended Context Features
@@ -40,21 +40,23 @@ ML-powered cricket intelligence platform for IPL T20 matches with:
 |---------|------|-----------|---------------|-------|
 | `last_over_runs` | int | 0 - 37 | Same as `current_score` | Recent momentum |
 | `balls_since_boundary` | int | 0 - 120 | `balls_since_boundary / 120` | Pressure indicator |
-| `percentage_target_achieved` | float | 0 - 1 | None | 0.0 for innings 1; `current_score / target` for innings 2 |
+| `percentage_target_achieved` | float | 0 - 1 | None | 0.0 for inning 1; `current_score / target` for inning 2 |
 
 ### 1.3 Player Features
 
 | Feature | Type | Raw Range | Normalization | Notes |
 |---------|------|-----------|---------------|-------|
-| `batter_embedding` | vector | [-1, 1] | None | Pre-normalized |
-| `non_striker_embedding` | vector | [-1, 1] | None | Pre-normalized |
-| `bowler_embedding` | vector | [-1, 1] | None | Pre-normalized |
+| `macro_batter_embedding` | vector | [-1, 1] | None | Pre-normalized |
+| `micro_batter_embedding` | vector | [-1, 1] | None | Pre-normalized |
+| `micro_non_striker_embedding` | vector | [-1, 1] | None | Pre-normalized |
+| `macro_bowler_embedding` | vector | [-1, 1] | None | Pre-normalized |
+| `micro_bowler_embedding` | vector | [-1, 1] | None | Pre-normalized |
 
 ### 1.4 Venue & Metadata
 
 | Feature | Type | Raw Range | Normalization | Notes |
 |---------|------|-----------|---------------|-------|
-| `venue_embedding` | vector[10-15] | [-1, 1] | None | Pre-normalized |
+| `macro_venue_embedding` | vector | [-1, 1] | None | Pre-normalized |
 | `season_year` | int | 2008 - 2030 | `(year - μ) / σ` | Standardization (mean & std) |
 
 ## 2. Normalization Strategy for Run-Related Features
@@ -86,12 +88,13 @@ These values are starting points and may be tuned based on validation performanc
 
 **Generation**:
 - Computed externally using historical delivery data
+- Micro embeddings by TabTransformer and Macro by PCA / Standardization of Stats
 - Season N embeddings: Use data from seasons 2008 to N-1 only
-- Dimension: 15-50 (players), 10-15 (venues)
+- Dimension: 20-70 (players), 10-15 (venues)
 
 **Cold Start**:
-- New players (< 50 balls batted / < 30 balls bowled): Use role-based league average
-- New venues (< 5 matches): Use league-average venue embedding
+- New players (That Season): Use role-based league average
+- New venues (That Season): Use league-average venue embedding
 
 **Chronological Safety**: Embeddings for 2024 use 2008-2023 data; 2025 uses 2008-2024 data.
 
@@ -133,19 +136,20 @@ Match outcome emerges from the interaction of these models inside the simulator.
 
 ### 5.2 Unified LSTM Run Model (All Balls)
 - **Type**: Sequence-based multi-class classifier
-- **Input**: Last 6 legal balls (6 × feature_dim)
+- **Input**: Last 30 balls (30 × feature_dim)
 - **Output**: P(runs) for {0, 1, 2, 3, 4, 5, 6}
 - **Architecture**: During Building Phase
-- **Padding**: Left-zero-padding used for dummy historical deliveries when predicting balls 1 through 6
+- **Padding**: Left-zero-padding used for dummy historical deliveries when predicting balls 1 through 29
 
 **Model Transition**:
 ```
-Ball 1: [0, 0, 0, 0, 0, Ball_1_Features]
-Ball 2: [0, 0, 0, 0, Ball_1_Features, Ball_2_Features]
+Sequence predicting Ball 1:  [Pad, Pad, ..., Pad (x29), Ball_1_Features]
+Sequence predicting Ball 2:  [Pad, Pad, ..., Pad (x28), Ball_1_Features, Ball_2_Features]
 ...
-Ball 7: [Ball_2, Ball_3, Ball_4, Ball_5, Ball_6, Ball_7_Features]
+Sequence predicting Ball 30: [Ball_1, Ball_2, Ball_3, ..., Ball_30_Features]
+Sequence predicting Ball 31: [Ball_2, Ball_3, Ball_4, ..., Ball_31_Features]
 ```
-LSTM sequence resets at start of each innings
+LSTM sequence resets at start of each inning
 
 ## 6. Match Simulation Flow
 
@@ -170,16 +174,16 @@ Each ML component has a clearly defined target variable:
 
 | Constraint | Rule |
 |------------|------|
-| Max overs | 4 per bowler per innings |
-| Consecutive | Cannot bowl overs N and N+1 in same innings |
+| Max overs | 4 per bowler per inning |
+| Consecutive | Cannot bowl overs N and N+1 in same inning |
 | Validity | Must be in playing XI |
 | Minimum | < 5 bowlers allowed (flexibility) |
 
 ### 6.3 Match Structure
 
-- **Format**: 2 innings, 20 overs each, 120 legal balls per innings
-- **Termination**: 20 overs complete OR 10 wickets fall OR target reached (innings 2)
-- **Target**: `innings_1_score + 1` for innings 2; `0` for innings 1
+- **Format**: 2 inning, 20 overs each, 120 legal balls per inning
+- **Termination**: 20 overs complete OR 10 wickets fall OR target reached (inning 2)
+- **Target**: `inning_1_score + 1` for inning 2; `0` for inning 1
 - **RL Control**: Selects bowler at start of each over for both teams
 
 ## 7. Reinforcement Learning Environment
@@ -188,7 +192,7 @@ Each ML component has a clearly defined target variable:
 
 **Objective**: Select optimal bowler at the start of each over to maximize win probability.
 
-- **Decision frequency**: Once per over (~20 per innings)
+- **Decision frequency**: Once per over (~20 per inning)
 - **Scope**: Controls bowling for both teams
 
 ### 7.2 RL State Space
@@ -229,13 +233,13 @@ Each ML component has a clearly defined target variable:
 
 - **League**: IPL only (2008-present)
 - **Granularity**: Ball-by-ball legal deliveries (wides/no-balls removed)
-- **Structure**: Each over = exactly 6 legal balls
+- **Structure**: Data processed in overlapping sliding windows of exactly 30 balls.
 
 ### 9.2 Chronological Split
 
 | Set | Description |
 |-----|-------------|
-| **Training** | Seasons 2009 to 2024 |
+| **Training** | Seasons 2010 to 2024 |
 | **Validation** | Season 2025 (First Half) |
 | **Test** | Season 2025 (Second Half) |
 
@@ -257,22 +261,22 @@ Each ML component has a clearly defined target variable:
 5. Create chronological train/val/test splits
 
 ### Phase 2: Embedding Generation (External)
-1. Compute player embeddings (batters, bowlers) from historical data
-2. Compute venue embeddings
+1. Compute macro and micro player embeddings (batters, bowlers) from historical data
+2. Compute macro venue embeddings
 3. Generate league-average embeddings for cold-start
 4. Place embeddings in dataset as fixed vectors
 5. Ensure chronological constraint (season N uses data up to N-1)
 
 ### Phase 3: ML Models
 1. Train wicket model (binary classifier with class weights)
-2. Train unified LSTM run model for all balls (using zero-padding for early balls)
+2. Train unified LSTM using overlapping sliding window sequences to prevent data starvation (using zero-padding for early balls)
 3. Validate on validation set, tune hyperparameters
 4. Evaluate on test set
 
 ### Phase 4: Simulator
 1. Integrate wicket and LSTM run models
 2. Implement strike rotation and bowling constraints
-3. Build full 2-innings match loop
+3. Build full 2-inning match loop
 4. Test with historical match replays
 
 ### Phase 5: RL Environment
@@ -300,13 +304,14 @@ Each ML component has a clearly defined target variable:
 ## 12. Key Design Decisions
 
 ### Finalized
-- **Unified LSTM**: Used from Ball 1 utilizing zero-padded history for the first 6 deliveries.
-- **Innings Handling**: 0 for innings 1
+- **LSTM Sequence Strateg**y: Overlapping sliding windows of 30 balls to massively increase training data volume and capture multi-over momentum.
+- **Player Representation**: Concatenation of TabTransformer micro-interactions and normalized macro-season stats at the sequence input.
+- **inning Handling**: 0 for inning 1
 - **Main Model**: Multi-model cricket simulation system with specialized models interacting through a simulator
 - **Ball Encoding**: Cyclic (sin/cos) to capture position
 - **Embeddings**: Pre-computed externally, not trainable
 - **Bowling Flexibility**: < 5 bowlers allowed if needed
-- **Consecutive Overs**: Constraint applies within innings only
+- **Consecutive Overs**: Constraint applies within inning only
 
 ### To Be Decided During Training
 - **Run normalization**: Test min-max / ÷100 / ÷200 / standardization
@@ -326,8 +331,8 @@ season_year        → (year - μ) / σ
 runs (all)         → TBD (min-max / ÷100 / ÷200)
 embeddings         → None (already normalized)
 phase              → One-hot encoding
-innings            → None (0 or 1)
-percentage_target_achieved  → 0.0 (1st innings) or current/target (2nd innings)
+inning            → None (0 or 1)
+percentage_target_achieved  → 0.0 (1st inning) or current/target (2nd inning)
 ```
 
 ### Model Flow
@@ -357,8 +362,8 @@ For each ball:
 
 ### Constraints Validation
 ```
-✓ Max 4 overs per bowler per innings
-✓ No overs N and N+1 by same bowler (same innings)
+✓ Max 4 overs per bowler per inning
+✓ No overs N and N+1 by same bowler (same inning)
 ✓ Bowler must be in playing XI
 ✓ < 5 bowlers permitted (flexibility)
 ```

@@ -1,7 +1,7 @@
 import pandas as pd
 
-deliveries = pd.read_csv("../New Data/deliveries_updated_ipl_upto_2025.csv")
-matches = pd.read_csv("../New Data/matches_updated_ipl_upto_2025.csv")
+deliveries = pd.read_parquet("../ml-service/data/processed/clean_deliveries.parquet")
+matches = pd.read_parquet("../ml-service/data/processed/clean_matches.parquet")
 
 print("Deliveries shape:", deliveries.shape)
 print("Matches shape:", matches.shape)

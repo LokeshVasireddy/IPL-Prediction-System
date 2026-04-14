@@ -1,0 +1,16 @@
+{
+    "dataset_name": "clean_deliveries",
+    "created_on": "2026-04-08 21:40:18",
+    "dataset_path": "D:\\IPL-Prediction-System\\data-service\\..\\ml-service\\data\\processed\\v3_alpha\\clean_deliveries.parquet",
+    "raw_sources": [
+        "D:\\IPL-Prediction-System\\data-service\\..\\New Data\\deliveries_updated_ipl_upto_2025.csv",
+        "D:\\IPL-Prediction-System\\data-service\\..\\ml-service\\data\\processed\\v3_alpha\\clean_matches.parquet"
+    ],
+    "preprocessing": [
+        "missing_value_handling",
+        "batsman_runs_creation",
+        "inning_mapping",
+        "washed_match_removal",
+        "sorting"
+    ]
+}
