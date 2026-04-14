@@ -4,27 +4,25 @@ services:
   api-gateway:
     build:
       context: ./api-gateway
-      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
       - ml-service
+      - mongo
     environment:
       - NODE_ENV=production
+      - MONGO_URI=mongodb+srv://vasireddylokesh3_db_user:JsMdMMr5j1w1VJdR@cluster0.don7c03.mongodb.net/?appName=Cluster0/ipl_db
     restart: unless-stopped
 
   ml-service:
     build:
       context: ./ml-service
-      dockerfile: Dockerfile
     ports:
       - "5001:5000"
     volumes:
-      # mount model instead of baking into image
       - ./models:/app/models
     environment:
       - ENV=production
-      - MONGO_URI=mongodb+srv://vasireddylokesh3_db_user:JsMdMMr5j1w1VJdR@cluster0.don7c03.mongodb.net/?appName=Cluster0
     restart: unless-stopped
 
   mongo:
@@ -35,23 +33,5 @@ services:
       - mongo_data:/data/db
     restart: unless-stopped
 
-# named volume (persistent but controlled)
 volumes:
   mongo_data:
-
-
-
-  # docker compose up --build
-
-  #output:
-#   ml-service     | Uvicorn running on http://0.0.0.0:5000
-# api-gateway    | Server running on port 3000
-# mongo          | Waiting for connections on port 27017
-
-
-# Hit Endpoint
-# http://localhost:5001/db-check
-# Output:
-# {
-#   "db": "connected"
-# }
