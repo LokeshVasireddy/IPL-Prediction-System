@@ -6,8 +6,6 @@ A production-grade IPL match simulation and analytics platform — demonstrating
 
 This is not a research notebook or a simple classifier. The goal is a **deployable simulation system** with clean separation between training, inference, and serving layers.
 
----
-
 ## Primary Objective
 
 Build a subscription-tier IPL simulation platform that:
@@ -18,8 +16,6 @@ Build a subscription-tier IPL simulation platform that:
 - Serves predictions via a low-latency REST API
 - Presents insights through an interactive analytics dashboard
 - Is reproducible, versioned, and deployable
-
----
 
 ## Core Product Features
 
@@ -37,8 +33,6 @@ Build a subscription-tier IPL simulation platform that:
 |---------|---------|
 | **Custom Team Creation** | Pick real IPL players from existing rosters to build a custom team, then simulate matches with it |
 | **Season Simulation** | Two modes: (1) Simulate all matches in a real IPL season → generate points table + winner; (2) Simulate a full custom league season using user-created teams |
-
----
 
 ## System Architecture
 
@@ -74,8 +68,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - Produces interpretable ball-by-ball output, not just a final prediction
 - Allows "what-if" scenarios (change bowler, change batting order, etc.)
 
----
-
 ## Target Tech Stack
 
 |     Layer     |               Technology                      |
@@ -89,8 +81,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 | Database      | MongoDB or PostgreSQL (TBD)                   |
 | Infra         | Docker, Docker Compose, GitHub Actions CI     |
 | Deployment    | Cloud-hosted (TBD: Render / Railway / GCP)    |
-
----
 
 ## Core Capabilities (Must-Have)
 
@@ -114,8 +104,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - Mid-match simulation support
 - Custom team management (paid tier)
 
----
-
 ## Secondary Capabilities (Future)
 
 - Scenario simulation engine (what-if: change bowler, change team composition)
@@ -124,8 +112,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - Advanced analytics (batting order optimization, bowling strategy)
 
 **Explicitly out of scope:** IPL Chatbot (cancelled)
-
----
 
 ## Why This Is Non-Trivial
 
@@ -145,8 +131,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - **Latency constraints** — end-to-end simulation must complete in <1s
 - **Subscription enforcement** — feature gating across Free vs $10 tiers
 - **Database design** — embedding storage and retrieval at inference time
-
----
 
 ## Success Criteria
 
@@ -170,8 +154,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - Subscription tier enforcement working (Free vs $10 features)
 - Payment integration (for $10 tier)
 
----
-
 ## Non-Goals
 
 - No deep learning unless benchmarks justify it
@@ -179,8 +161,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 - No betting-style or gambling-adjacent predictions
 - No focus on real-time data ingestion (static dataset 2008–2024 is sufficient for v1)
 - No IPL Chatbot (cancelled)
-
----
 
 ## Strategic Principles
 
@@ -200,8 +180,6 @@ The difference between a "project" and a "product" is:
 - MLflow tracking
 - Docker containerization
 - Clean separation of training and inference
-
----
 
 ## Target Audience
 

@@ -3,8 +3,6 @@
 > This file exists to give an AI assistant (or new contributor) immediate orientation.  
 > Always consult this before creating or modifying files.
 
----
-
 ## Root
 
 ```
@@ -20,8 +18,6 @@ IPL-Prediction-System/
 ├── Original Data/        Raw source IPL data files (2008–2024)
 └── .gitignore
 ```
-
----
 
 ## ml-service/
 
@@ -77,8 +73,6 @@ ml-service/
 - Saved models → `models/`
 - New datasets → `data/`
 
----
-
 ## data-service/
 
 **Purpose:** Data ingestion, cleaning, feature engineering, embedding creation, and dataset versioning.
@@ -117,8 +111,6 @@ data-service/
 - Add feature engineering functions to `features.py` (keep v1 functions for comparison)
 - Add embedding creation to `embeddings.py`
 - Version output as `dataset_v2.parquet`
-
----
 
 ## frontend/
 
@@ -162,22 +154,16 @@ frontend/
 
 **Note:** Do not add new pages until the corresponding backend endpoint exists.
 
----
-
 ## api-gateway/
 
 **Purpose:** Single entry point that routes requests to ml-service, data-service, analytics-service.  
 **Current state:** Empty scaffold. Do not add logic here until Phase 3.  
 **Planned stack:** Node.js + Express
 
----
-
 ## analytics-service/
 
 **Purpose:** Serve team stats, venue stats, historical match data.  
 **Current state:** Empty scaffold. Do not add logic here until Phase 3.
-
----
 
 ## docs/
 
@@ -199,8 +185,6 @@ docs/
 └── Project_Structure.md      This file — repo map and file placement rules
 ```
 
----
-
 ## Legacy Warning
 
 `Main Project/` contains the original LSTM-based project built before the architectural redesign. It is kept for reference only.
@@ -215,8 +199,6 @@ The new architecture uses:
 - Microservices (not monolith)
 - Simulation (not classification)
 - Embeddings (not one-hot encoding)
-
----
 
 ## Key Conventions
 
@@ -248,8 +230,6 @@ The new architecture uses:
 - Stored in database (MongoDB or PostgreSQL — TBD)
 - Retrieved at inference time (not recomputed)
 - Updated: recent form vectors after each match, base embeddings after retraining
-
----
 
 ## Navigation Guide
 

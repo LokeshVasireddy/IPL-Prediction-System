@@ -4,8 +4,6 @@
 > **Approach:** Phased execution with clear blockers flagged at each stage.  
 > **Timeline:** 8-9 weeks total (2 people: ML Engineer + Web Developer)
 
----
-
 ## ✅ Week 1 — System Audit & Baseline (COMPLETE)
 
 ### Completed Deliverables
@@ -40,8 +38,6 @@
 - ✅ Week 1 completion logs (`/docs/Week 1/`)
 - ✅ Architecture decisions documented (`final_decision.md`)
 
----
-
 ## 🔴 Critical Blockers (Must Resolve Before Week 2/3)
 
 | Blocker | Decision Needed | Impact | Owner |
@@ -53,8 +49,6 @@
 | **Embedding Training Method** | End-to-end vs pre-trained | Affects Dataset v2 creation | ML Engineer |
 
 **Action Required:** Schedule decision meeting before Week 2 coding starts.
-
----
 
 ## Week 2–3 — Dataset v2 + Core ML Pipeline
 
@@ -113,8 +107,6 @@
 - [ ] Sequence model: RMSE < 2 runs per ball
 - [ ] Cross-validation on time-based splits
 
----
-
 ## Week 4 — Match Simulator + RL Bowler Selection
 
 ### Phase 1: Simulation Engine
@@ -159,8 +151,6 @@
 - [ ] RL agent beats rule-based selection in win rate
 - [ ] Bowler selection choices are interpretable (not random)
 
----
-
 ## Week 5 — Backend API + Inference Pipeline
 
 ### Backend Engineering
@@ -189,8 +179,6 @@
 - [ ] Unit tests for `/simulate-match` endpoint
 - [ ] Integration tests (end-to-end simulation)
 - [ ] Load testing (concurrent requests)
-
----
 
 ## Week 6 — Frontend Integration + Product Features
 
@@ -236,8 +224,6 @@
 - [ ] Error boundaries
 - [ ] Dark / light theme (optional)
 
----
-
 ## Week 7 — Analytics Service + API Gateway
 
 ### Analytics Service
@@ -268,8 +254,6 @@
 - [ ] Add request logging (trace ID across services)
 - [ ] Add CORS policy
 - [ ] Add API versioning (`/v1/simulate-match`)
-
----
 
 ## Week 8 — Deployment + Production Hardening
 
@@ -314,8 +298,6 @@
 - [ ] Performance metrics writeup (latency, accuracy, win rate)
 - [ ] Blog article / write-up for portfolio
 
----
-
 ## Parallel Tracks (Ongoing)
 
 ### MLOps (ML Engineer — Weeks 2–8)
@@ -336,8 +318,6 @@
 - [ ] Role-based access control (Free vs $10 tier)
 - [ ] HTTPS enforcement
 
----
-
 ## Open Research Questions (Low Priority)
 
 | Question | Owner | Timeline |
@@ -346,8 +326,6 @@
 | LightGBM model — should we benchmark it? | ML Engineer | Week 3 |
 | Real-time match tracking (pseudo-live mode) | ML Engineer | Post-launch |
 | Advanced analytics (batting order optimization) | ML Engineer | Post-launch |
-
----
 
 ## Execution Rules
 
@@ -365,8 +343,6 @@
 - Log all experiments with MLflow
 - Write unit tests for new code
 - Document all architectural decisions
-
----
 
 ## Success Metrics (Final Deliverable)
 

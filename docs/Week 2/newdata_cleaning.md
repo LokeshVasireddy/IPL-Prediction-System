@@ -16,8 +16,6 @@ This stage ensures:
 * metadata tracking
 * reproducible data pipeline
 
----
-
 # Raw Datasets
 
 ## Matches Dataset
@@ -39,8 +37,6 @@ Contains:
 * toss details
 * umpire details
 * other metadata
-
----
 
 ## Deliveries Dataset
 
@@ -68,8 +64,6 @@ Contains:
 * player_dismissed
 * date
 
----
-
 # Pipeline Structure
 
 ```
@@ -91,8 +85,6 @@ run_pipeline.py
 newdata_cleaning.md
 ```
 
----
-
 # Dataset Versioning
 
 Dataset version:
@@ -113,8 +105,6 @@ Metadata location:
 ml-service/data/metadata/v3_alpha/
 ```
 
----
-
 # Pipeline Execution
 
 Command:
@@ -122,8 +112,6 @@ Command:
 ```
 py run_pipeline.py
 ```
-
----
 
 # Pipeline Steps
 
@@ -207,8 +195,6 @@ clean_matches.parquet
 clean_matches.json
 ```
 
----
-
 # STEP 2: Clean Deliveries
 
 ### File
@@ -220,15 +206,13 @@ pipeline/clean_deliveries.py
 ### Operations Performed
 
 1. Load deliveries dataset
-
 2. Convert date to datetime
-
 3. Fill missing values
 
 ```
 isWide → 0
 isNoBall → 0
-player_dismissed → 0
+player_dismissed → "Not Out"
 Byes → 0
 LegByes → 0
 Penalty → 0
@@ -243,8 +227,6 @@ Byes and LegByes adjusted properly.
 Removed:
 
 ```
-Byes
-LegByes
 over_ball
 dismissal_kind
 extras
@@ -254,21 +236,14 @@ extras
 
 Removes super overs.
 
-7. Handle penalty
-
-```
-isWide += Penalty
-Penalty removed
-```
-
-8. Map innings
+7. Map innings
 
 ```
 1 → 0
 2 → 1
 ```
 
-9. Convert types
+8. Convert types
 
 ```
 batsman_runs → int
@@ -276,7 +251,7 @@ isWide → int
 isNoBall → int
 ```
 
-10. Remove washed-out matches
+9. Remove washed-out matches
 
 Using:
 
@@ -286,7 +261,7 @@ clean_matches.parquet
 
 Only valid match IDs retained.
 
-11. Sort chronologically
+10. Sort chronologically
 
 ```
 date
@@ -296,23 +271,21 @@ over
 ball
 ```
 
-12. Remove duplicate rows
+11. Remove duplicate rows
 
 Ensures data integrity.
 
-13. Save parquet
+12. Save parquet
 
 ```
 clean_deliveries.parquet
 ```
 
-14. Save metadata
+13. Save metadata
 
 ```
 clean_deliveries.json
 ```
-
----
 
 # Metadata Tracking
 
@@ -341,8 +314,6 @@ This enables:
 * debugging
 * version control
 
----
-
 # Pipeline Output
 
 ## Processed Data
@@ -364,8 +335,6 @@ ml-service/data/metadata/v3_alpha/
 clean_matches.json
 clean_deliveries.json
 ```
-
----
 
 # Terminal Execution
 
@@ -409,8 +378,6 @@ Metadata saved
 
 Pipeline completed successfully
 
----
-
 # Outcome
 
 The new IPL datasets are now:
@@ -427,8 +394,6 @@ Datasets are ready for:
 ```
 Step 3: Player Stats Pipeline
 ```
-
----
 
 # Next Step
 
@@ -449,8 +414,6 @@ from:
 clean_deliveries.parquet
 clean_matches.parquet
 ```
-
----
 
 # Status
 

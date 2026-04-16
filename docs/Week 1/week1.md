@@ -5,8 +5,6 @@
 > **Roles covered:** ML Engineer · Web Developer  
 > **Purpose:** Reviewer milestone submission — end of Week 1
 
----
-
 ## Table of Contents
 
 1. [Project Overview & Architecture](#1-project-overview--architecture)
@@ -18,8 +16,6 @@
 7. [Week 1 Evaluation (Web Dev)](#7-week-1-evaluation-web-dev)
 8. [Known Gaps — To Be Resolved Before Week 2/3](#8-known-gaps--to-be-resolved-before-week-2/3)
 9. [Overall Progress Summary](#9-overall-progress-summary)
-
----
 
 ## 1. Project Overview & Architecture
 
@@ -81,8 +77,6 @@ IPL-Prediction-System/
 └── README.md
 ```
 
----
-
 ## 2. Web Development — Microservices & Infrastructure
 
 ### 2.1 Microservices Overview
@@ -118,8 +112,6 @@ IPL-Prediction-System/
 - `data-service` → data handling
 - `analytics-service` → insights & stats
 
----
-
 ### 2.2 Docker Setup
 
 Each service has its own `Dockerfile`, orchestrated via `docker-compose`.
@@ -152,8 +144,6 @@ curl -X POST http://localhost:8080/predict \
   -d '{"team1": "CSK", "team2": "MI", "venue": "Wankhede"}'
 # Response: { "winner": "CSK", "confidence": 0.72 }
 ```
-
----
 
 ### 2.3 Dev Tooling
 
@@ -200,8 +190,6 @@ Enforces on every commit: ESLint on frontend files, Black & isort on Python file
 - Black & isort validation
 - Test execution (if available)
 
----
-
 ### 2.4 Web Dev Deliverables
 
 - [x] All services start via `docker compose up --build`
@@ -210,8 +198,6 @@ Enforces on every commit: ESLint on frontend files, Black & isort on Python file
 - [x] Linting and formatting checks pass
 - [x] Pre-commit hooks enforce code quality
 - [x] GitHub Actions CI passes on `main`
-
----
 
 ## 3. ML Engineering — Data Pipeline
 
@@ -234,8 +220,6 @@ A modular data pipeline to transform raw IPL match data into model-ready format.
 - Fully reproducible via a single execution script (`pipeline.py`)
 - Clean foundation for training, evaluation, and MLOps integration
 - Data-service owns all preprocessing; ml-service consumes the ready parquet file
-
----
 
 ## 4. ML Engineering — MLOps Foundations
 
@@ -268,8 +252,6 @@ mlflow.set_experiment(EXPERIMENT_NAME)
 python -m training.simple_train_test --config configs/lstm_v1.yaml
 ```
 
----
-
 ### 4.2 Model Versioning
 
 All model parameters are driven from `configs/lstm_v1.yaml` — nothing is hardcoded. Different experiments are managed via separate YAML config files, enabling comparison without modifying training code.
@@ -287,8 +269,6 @@ model = keras.Sequential([
 ])
 ```
 
----
-
 ### 4.3 Reproducible Training Pipeline
 
 - Config loaded via CLI (`--config`), no hardcoded values anywhere
@@ -296,8 +276,6 @@ model = keras.Sequential([
 - Full pipeline runs inside a single MLflow run with exception handling
 - Dataset loaded from versioned Parquet (not raw CSV)
 - LSTM reshape handled in training script (`reshape(N, 1, features)`)
-
----
 
 ### 4.4 Data Version Awareness
 
@@ -314,8 +292,6 @@ Each dataset version has a corresponding metadata JSON (`data/metadata/v2_alpha.
 ```
 
 This metadata is logged as an MLflow artifact, linking every experiment run back to its exact dataset and feature version.
-
----
 
 ### 4.5 Minimal Testing (pytest)
 
@@ -350,8 +326,6 @@ testpaths = tests
 pythonpath = .
 ```
 
----
-
 ### 4.6 Logging & Log Rotation
 
 **Before:** `print()` statements — no structured output, no traceability.  
@@ -373,8 +347,6 @@ pythonpath = .
 **Log rotation:** Daily via `TimedRotatingFileHandler`, 7-day retention. Old logs auto-cleaned on logger startup.
 
 **Files updated:** `simple_train_test.py`, `model_loader.py`, `registry.py` — all `print()` replaced with structured logger calls.
-
----
 
 ### 4.7 Model Registry
 
@@ -423,8 +395,6 @@ This links the deployed model back to its MLflow run, dataset version, and featu
 
 > **Note:** A custom folder-based registry is used intentionally for Week 1 simplicity. MLflow Model Registry (`register_model`) is planned for later stages when multi-service deployment becomes relevant.
 
----
-
 ## 5. ML Engineering — Baseline Model Comparison & Model Decision
 
 ### Overview
@@ -462,8 +432,6 @@ The separation between the top 3 is narrow (~0.004 R²), but the pattern is clea
 
 This comparison satisfies the reviewer requirement of justifying the model family choice before freezing the architecture.
 
----
-
 ## 6. Dataset v2 Strategy — Finalized Direction
 
 ### Decision
@@ -498,8 +466,6 @@ After a joint review between the ML Engineer and Web Developer, the Dataset v2 f
 
 A formal feature specification document (`docs/feature_spec.md`) is a **tracked gap** — see Section 8.
 
----
-
 ## 7. Week 1 Evaluation (Web Dev)
 
 > Evaluation done strictly against Week 1 scope — not full project expectations.
@@ -528,8 +494,6 @@ A formal feature specification document (`docs/feature_spec.md`) is a **tracked 
 
 > Real evaluation depth begins in **Week 2/3** when API integration, ML integration, and real frontend work begin.
 
----
-
 ## 8. Known Gaps — To Be Resolved Before Week 2/3
 
 These are acknowledged gaps from the reviewer's evaluation. All are tracked with owner and target.
@@ -544,8 +508,6 @@ These are acknowledged gaps from the reviewer's evaluation. All are tracked with
 **Note:** Baseline model comparison and model family decision (previously flagged as gaps by the reviewer) are now **resolved** — see Section 5.
 
 **Note:** Dataset v2 feature strategy (embeddings) is now **finalized** — see Section 6. Implementation begins in Week 2/3.
-
----
 
 ## 9. Overall Progress Summary
 
@@ -593,7 +555,5 @@ These are acknowledged gaps from the reviewer's evaluation. All are tracked with
 | Dataset v2 strategy and feature direction | ✅ Resolved — see Section 6 |
 | Feature specification document | ❌ Pending — before Week 2/3 |
 | Architecture diagram | ❌ Pending — before Week 2/3 |
-
----
 
 *Week 1 establishes the full foundation: microservice architecture, MLOps pipeline, experiment tracking, model registry, automated testing, structured logging, CI/CD, a full 7-model comparison, and a finalized Dataset v2 embeddings strategy. The 2 remaining gaps (feature spec doc, architecture diagram) are tracked and will be closed before Week 2/3 begins.*

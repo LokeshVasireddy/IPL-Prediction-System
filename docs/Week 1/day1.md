@@ -5,12 +5,8 @@ Understand the legacy IPL prediction system before making any architectural or m
 
 No refactoring, tuning, infra work, or feature building was performed intentionally.
 
----
-
 ## Timeline
 Project deadline extended to **mid-April** to allow production-grade engineering and modeling decisions.
-
----
 
 ## System Snapshot
 - Backend: Flask  
@@ -20,8 +16,6 @@ Project deadline extended to **mid-April** to allow production-grade engineering
 
 System runs locally end-to-end.
 
----
-
 ## Environment
 - Python: 3.12.10  
 - OS: Windows 11  
@@ -29,8 +23,6 @@ System runs locally end-to-end.
 - GPU: Not detected (CPU only)
 
 Environment recreated successfully. Training and inference verified.
-
----
 
 ## Model Findings
 
@@ -42,8 +34,6 @@ Sequence length = **1**
 
 Result:  
 LSTM behaves like a feedforward model with unnecessary complexity.
-
----
 
 ## Features
 - batting_team (one-hot)  
@@ -57,8 +47,6 @@ Targets:
 - wickets  
 
 `winner` exists but is not modeled directly.
-
----
 
 ## Baseline Results
 
@@ -75,8 +63,6 @@ The problem currently behaves as a **tabular regression task**, not a sequential
 
 Production direction will favor gradient boosting unless a true sequential simulator is built.
 
----
-
 ### Interpretation
 
 - XGBoost achieves the lowest prediction error across all major metrics.
@@ -85,8 +71,6 @@ Production direction will favor gradient boosting unless a true sequential simul
 
 **Conclusion:**  
 Performance gains are more likely to come from improved feature engineering and dataset quality than increased model complexity.
-
----
 
 ## Dataset Notes
 ~260k rows, ball-level match state.
@@ -108,14 +92,10 @@ Current features assume uniform batting capability across teams — unrealistic.
 Late-innings states are easier to predict than early-game scenarios.  
 Future validation must segment by match phase.
 
----
-
 ## Major Insight
 Predicting runs ≠ predicting match outcomes.
 
 **Win probability** will be the primary production objective.
-
----
 
 ## Future Dataset Direction
 A new dataset will be engineered using accumulated domain and ML experience.
@@ -130,8 +110,6 @@ Focus areas:
 
 Dataset quality is expected to drive larger gains than model complexity.
 
----
-
 ## Technical Debt Identified
 - Training coupled with API  
 - No dataset versioning  
@@ -142,16 +120,12 @@ Dataset quality is expected to drive larger gains than model complexity.
 
 Debt documented — not resolved today.
 
----
-
 ## Decisions
 - Do NOT refactor yet  
 - Do NOT migrate frameworks  
 - Do NOT tune models  
 
 Clarity before rebuilding.
-
----
 
 ## Emerging Architecture Direction
 
@@ -165,8 +139,6 @@ Clarity before rebuilding.
 **Sequential Match Simulator**
 - scenario forecasting  
 - ball-by-ball modeling  
-
----
 
 ## True Sequential Modeling Plan
 
@@ -187,8 +159,6 @@ Deep learning will be applied where it provides structural advantage — not by 
 
 The goal is not to use neural networks unnecessarily, but to deploy them where temporal dependency creates modeling leverage.
 
----
-
 ## Day 1 Result
 Ambiguity removed.  
 System understood.  
@@ -196,8 +166,6 @@ Risks identified.
 Direction clarified.
 
 Project ready for structured engineering work.
-
----
 
 # Context for Next ChatGPT
 
@@ -225,8 +193,6 @@ Prioritize:
 Avoid premature infra or unnecessary complexity.
 
 Act as a senior ML engineer guiding a serious production project.
-
----
 
 # Web / System Lead — Day 1
 *(To be completed by teammate)*

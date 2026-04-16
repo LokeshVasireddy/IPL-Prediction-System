@@ -2,8 +2,6 @@
 
 A **microservices-based IPL match prediction platform** combining ML training pipelines, a FastAPI inference service, a Node.js API gateway, a React frontend, and Docker orchestration.
 
----
-
 ## High-Level Architecture
 
 ```mermaid
@@ -30,8 +28,6 @@ graph LR
     TR -->|reads parquet, saves| Models
 ```
 
----
-
 ## 1. Original Data & Data Cleaning
 
 | File | Purpose |
@@ -41,8 +37,6 @@ graph LR
 | [data_cleaning.ipynb](file:///d:/IPL-Prediction-System/Original%20Data/data_cleaning.ipynb) | Jupyter notebook that joins and cleans the above into [data1.csv](file:///d:/IPL-Prediction-System/Original%20Data/data1.csv) (~260K rows) |
 
 The cleaned dataset has columns: `batting_team`, `bowling_team`, `venue`, `over`, `ball`, [runs](file:///d:/IPL-Prediction-System/ml-service/tests/test_inference.py#10-27), `wickets`, `winner`.
-
----
 
 ## 2. Data Service — ETL Pipeline
 
@@ -69,8 +63,6 @@ graph TD
 | [pipeline.py](file:///d:/IPL-Prediction-System/data-service/pipeline.py) | Orchestrates all of the above end-to-end |
 
 **Output:** [ml-service/data/processed/v2_alpha/dataset.parquet](file:///d:/IPL-Prediction-System/ml-service/data/processed/v2_alpha/dataset.parquet) + [ml-service/data/metadata/v2_alpha.json](file:///d:/IPL-Prediction-System/ml-service/data/metadata/v2_alpha.json)
-
----
 
 ## 3. ML Service — The Core
 
@@ -176,8 +168,6 @@ MLflow stores runs in `experiments/mlruns.db` (SQLite). View with:
 mlflow ui --backend-store-uri sqlite:///experiments/mlruns.db --port 5000
 ```
 
----
-
 ## 4. API Gateway (Node.js / Express)
 
 > **Location:** `api-gateway/` — a thin proxy that sits between the frontend and the ML service.
@@ -188,8 +178,6 @@ mlflow ui --backend-store-uri sqlite:///experiments/mlruns.db --port 5000
 | [predict.js](file:///d:/IPL-Prediction-System/api-gateway/routes/predict.js) | `POST /predict` → proxies request to `http://ml-service:5000/predict` via axios |
 | [logger.js](file:///d:/IPL-Prediction-System/api-gateway/middleware/logger.js) | Morgan HTTP request logger (`dev` format) |
 | [auth.js](file:///d:/IPL-Prediction-System/api-gateway/middleware/auth.js) | Placeholder auth middleware (passes through, future JWT verification) |
-
----
 
 ## 5. Frontend (React + TypeScript + Vite + Tailwind)
 
@@ -219,8 +207,6 @@ mlflow ui --backend-store-uri sqlite:///experiments/mlruns.db --port 5000
 > [!NOTE]
 > The frontend currently calls the legacy Flask endpoint (`localhost:5000/api/predict`) directly. Once the API gateway is wired, it should call `localhost:3000/predict` instead.
 
----
-
 ## 6. Docker Compose — [docker-compose.yml](file:///d:/IPL-Prediction-System/docker-compose.yml)
 
 Orchestrates three containers:
@@ -231,8 +217,6 @@ Orchestrates three containers:
 | `ml-service` | 5001→5000 | FastAPI, mounts `./models` volume |
 | `mongo` | 27017 | MongoDB 6 with a persistent named volume (`mongo_data`) |
 
----
-
 ## 7. Documentation (`docs/`)
 
 | Doc | Summary |
@@ -241,8 +225,6 @@ Orchestrates three containers:
 | [Current_State.md](file:///d:/IPL-Prediction-System/docs/Current_State.md) | Baseline comparison results, known data issues, technical debt inventory |
 | [roadmap.md](file:///d:/IPL-Prediction-System/docs/roadmap.md) | 6-phase plan (Weeks 1–8): Baseline ✅ → Training pipeline → Dataset v2 → Product layer → Advanced features → Deploy |
 | [Project_Structure.md](file:///d:/IPL-Prediction-System/docs/Project_Structure.md) | File placement rules and conventions for contributors/AI assistants |
-
----
 
 ## 8. Current Status & What's Not Yet Working
 

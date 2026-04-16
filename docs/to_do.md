@@ -79,8 +79,6 @@
 - 🔜 Dataset v2 — embeddings replacing one-hot encoding
 - 🔜 Player statistics dataset
 - 🔜 Venue statistics dataset
-- 🔜 Team performance dataset
-- 🔜 Rolling averages / recent form computation (last 10 matches)
 - 🔜 Outlier handling
 - 🔜 Feature selection
 - 🔜 Data schema documentation (`docs/feature_spec.md`)
@@ -137,9 +135,8 @@
 
 - ✅ Parquet storage for datasets
 - ✅ MLflow artifact storage (models, configs, metadata)
-- 🔜 Player embeddings storage & retrieval
+- 🔜 Embeddings storage & retrieval
 - 🔜 User data storage
-- 🔜 Match data storage
 - 🔜 Player stats storage
 - 🔜 Match history storage
 - 🔜 Team squads & batting/bowling order storage
@@ -185,11 +182,10 @@
 
 - ✅ Structured logging (file + console, environment-aware)
 - ✅ Log rotation (7-day, TimedRotatingFileHandler)
-- 🔜 Centralized logging (consistent format across all services)
-- 🔜 Distributed tracing (trace ID per request across Gateway → ML Service → DB)
-- 🔜 Error tracking
-- 🔜 API latency monitoring
-- 🔜 System health monitoring (per service)
+- 🔜 Centralized observability (standardized logs across services)
+- 🔜 Distributed tracing (end-to-end request tracking)
+- 🔜 Application monitoring (latency, errors, uptime)
+- 🔜 System health checks (per service status + readiness)
 - ⚠️ Alerts — not yet decided
 - ⚠️ Monitoring dashboard — not yet decided
 
@@ -208,13 +204,19 @@
 
 ## 13. Testing
 
-- ✅ ML unit tests (6 passing — pipeline, bundle, inference, registry)
+- ✅ ML unit tests (pipeline, bundle, inference, registry)
 - ✅ Data pipeline tests
 - ✅ Inference tests
 - ✅ CI test automation (GitHub Actions)
-- 🔜 Backend unit tests
-- 🔜 API integration tests
-- 🔜 Coverage reports
+- 🔜 Backend unit tests (service logic, business rules, auth flows)
+- 🔜 API integration tests (end-to-end request/response validation)
+- 🔜 End-to-end system tests (full user journey across components)
+- 🔜 Contract tests (service-to-service / frontend-backend compatibility)
+- 🔜 Load / performance tests (latency, throughput, scaling limits)
+- 🔜 Failure-mode / resilience tests (timeouts, partial outages, retries)
+- 🔜 Security tests (auth, injection, data exposure checks)
+- 🔜 Test suite runner (executes multiple unit tests together)
+- 🔜 Coverage reports (threshold-based visibility and enforcement)
 
 ## 14. Documentation
 
@@ -255,4 +257,3 @@
 - 🔜 Task tracking
 - 🔜 Weekly milestones
 - 🔜 Issue management
-- 🔜 Sprint planning

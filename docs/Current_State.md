@@ -4,8 +4,6 @@
 > **Status:** Transitioning from baseline XGBoost model to full simulation-based architecture  
 > **Next milestone:** Week 2 — Feature engineering + Embedding system implementation
 
----
-
 ## Executive Summary
 
 Week 1 established the baseline: **GRU achieves the best accuracy (R² 0.7901)**, edging out XGBoost (R² 0.7863) and LSTM (R² 0.7874). However, **XGBoost is 26x faster** (0.0015 ms/sample vs 0.0393 ms/sample for GRU), making it the best choice for simple win-probability predictions.
@@ -14,7 +12,6 @@ GRU also **outperforms LSTM on every metric** while being 1.1x faster, making it
 
 **The project is now pivoting** from a simple win-probability predictor to a **full ball-by-ball match simulator** using embeddings, sequence models (GRU or LSTM), and reinforcement learning for bowler selection.
 
----
 
 ## Repository Structure
 
@@ -55,8 +52,6 @@ IPL-Prediction-System/
 
 **Legend:** ✅ Exists and functional · ⚠️ Exists but needs attention · 🔲 Planned, not started · 📄 Documentation
 
----
-
 ## Dataset
 
 ### Dataset v1 (Current)
@@ -86,8 +81,6 @@ IPL-Prediction-System/
 - Recent form vectors (last 10 matches)
 
 Dataset v2 will replace one-hot encoding with learned embeddings for players and static embeddings for venues.
-
----
 
 ## Architecture Transition
 
@@ -126,8 +119,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 
 **Why the pivot:** Simulation unlocks advanced features (custom teams, season simulation, scenario analysis) that simple classification cannot provide.
 
----
-
 ## ML Models
 
 ### Week 1 Baseline Results
@@ -159,8 +150,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 | Innings Sequence Model   | Predict runs on next ball (sequence)     | LSTM or GRU          | 🔲     |
 | Bowler Selection (RL)    | AI captain chooses which bowler bowls    | Reinforcement Learning | 🔲   |
 
----
-
 ## Backend
 
 ### Current State
@@ -176,8 +165,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 - No authentication
 - No structured logging for requests
 
----
-
 ## Frontend
 
 ### Current State
@@ -189,8 +176,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 ### Planned Features (Post-Backend)
 - Free tier: Match prediction (simulation), mid-match start, visual analytics
 - $10 lifetime tier: Custom team creation, season simulation
-
----
 
 ## Infrastructure
 
@@ -206,8 +191,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 | Cloud deployment        | 🔲 Not started |                                          |
 | Monitoring dashboard    | 🔲 Not started |                                          |
 | Redis caching           | 🔲 Not started |                                          |
-
----
 
 ## Critical Blockers (Must Resolve Before Week 2/3)
 
@@ -232,8 +215,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 | Blocker | Impact | Decision Needed |
 |---------|--------|-----------------|
 | Pipeline Orchestration | Not needed until retraining pipeline | Research Airflow — is it necessary? |
-
----
 
 ## Technical Debt
 
@@ -269,8 +250,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 ✅ Added CI/CD with GitHub Actions  
 ✅ Documented Week 1 progress in `/docs/Week 1/`  
 
----
-
 ## What's Next (Week 2/3)
 
 1. **Resolve blockers** — ML framework, database choice
@@ -278,8 +257,6 @@ Simulate Innings 1 → Simulate Innings 2 → Winner
 3. **Implement 4-model pipeline** — wicket, first 6 balls, sequence, RL
 4. **Build match simulator** — full innings loop logic
 5. **Train and validate** — end-to-end simulation testing
-
----
 
 ## Core Insight
 

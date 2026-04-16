@@ -5,8 +5,6 @@
 > **Last updated:** Week 1 → Week 2/3 transition
 > **Legend:** ✅ Decided | ⚠️ Open — must decide before implementation | 🔜 Planned
 
----
-
 ## 1. System Goal
 
 ✅ **Decided.**
@@ -20,8 +18,6 @@ Simulate Innings 1 → Simulate Innings 2 → Declare Winner
 This is not a simple win-probability classifier. The system simulates the match and the result emerges from that simulation.
 
 **Explicitly out of scope:** IPL Chatbot — cancelled.
-
----
 
 ## 2. Subscription Tiers
 
@@ -41,8 +37,6 @@ This is not a simple win-probability classifier. The system simulates the match 
 |---|---|
 | Own Team Creation & Simulation | User picks real IPL players from existing rosters to build a custom team, then simulates a match with it |
 | Season Simulation | Two modes: (1) simulate all matches in a real IPL season → generate points table + winner; (2) simulate a full custom league season using user-created teams |
-
----
 
 ## 3. High-Level Architecture
 
@@ -66,8 +60,6 @@ Match Simulator Engine
 Winner Prediction
 ```
 
----
-
 ## 4. ML Framework
 
 ⚠️ **Open — must decide before Week 2/3 implementation starts.**
@@ -79,8 +71,6 @@ Week 1 used TensorFlow/Keras. The same architecture could be built in PyTorch. T
 - Stay on TensorFlow/Keras
 
 **Impact:** Affects LSTM/GRU, wicket model, and runs model. Decide this first before writing any new model code.
-
----
 
 ## 4. Embedding System
 
@@ -122,8 +112,6 @@ Two valid approaches exist — end-to-end (embedding layers trained with the mod
 
 ✅ **Decided.** Static — venue characteristics are stable enough that a fixed embedding is acceptable.
 
----
-
 ## 5. Embedding Storage & Retrieval
 
 ✅ **Decided.**
@@ -154,8 +142,6 @@ Feed into models
 **Update strategy:** Recent form vectors are recomputed and updated in the database after each match (last 10 matches window slides forward). Base embeddings are updated on a less frequent schedule (e.g., end of season or after retraining).
 
 **Note:** Database choice (MongoDB vs PostgreSQL) is still open — see Section 10. This storage design works with either.
-
----
 
 ## 6. Model Components
 
@@ -210,8 +196,6 @@ Both are valid sequence models for this task. Week 1 comparison showed GRU edges
 3. Train RL agent using the simulator as the environment.
 4. Replace rule-based with trained RL agent.
 
----
-
 ## 7. Match Simulator Engine
 
 ✅ **Decided.**
@@ -235,8 +219,6 @@ check innings end
 - Target chased (2nd innings) → batting team wins
 - Target not chased → bowling team wins
 
----
-
 ## 8. Training Order
 
 ✅ **Decided.**
@@ -249,8 +231,6 @@ check innings end
 | 4 | Replace rule-based selection with trained RL model |
 | 5 | Full system integration and end-to-end testing |
 
----
-
 ## 9. Data
 
 ✅ **Decided.**
@@ -259,8 +239,6 @@ check innings end
 - **Format:** Parquet (versioned, from Week 1 pipeline)
 - **Dataset version moving to:** v2 (embeddings replacing one-hot encoding)
 
----
-
 ## 10. Database
 
 ⚠️ **Open.**
@@ -268,8 +246,6 @@ check innings end
 Week 1 docker-compose has MongoDB. Architecture doc specifies PostgreSQL. These serve different purposes (document store vs relational), and the right choice depends on how embeddings and player data are stored and queried.
 
 **Must decide:** Which database stores player embeddings, team squads, batting orders, and bowling pools.
-
----
 
 ## 11. Infrastructure & MLOps
 
@@ -287,8 +263,6 @@ Week 1 docker-compose has MongoDB. Architecture doc specifies PostgreSQL. These 
 
 The architecture doc mentions Airflow for orchestrating the data pipeline. This is not yet understood or decided. Research what Airflow is and whether it's needed at this stage before committing.
 
----
-
 ## 12. Tech Stack (Confirmed Portions)
 
 | Layer | Tool | Status |
@@ -303,8 +277,6 @@ The architecture doc mentions Airflow for orchestrating the data pipeline. This 
 | Database | MongoDB or PostgreSQL | ⚠️ Open |
 | Frontend | React | ✅ Decided |
 
----
-
 ## 13. Open Decisions — Summary
 
 | Decision | Priority | Notes |
@@ -316,15 +288,11 @@ The architecture doc mentions Airflow for orchestrating the data pipeline. This 
 | Database (MongoDB vs PostgreSQL) | 🟡 Medium | Needed before storing embeddings and squads |
 | Pipeline orchestration (Airflow) | 🟢 Low — not urgent | Research what it is first; not needed for Week 2/3 |
 
----
-
 ## 14. Week 1 Gaps Still Open
 
 | Gap | Owner | Target |
 |---|---|---|
 | `docs/feature_spec.md` — formal feature schema | ML Engineer | Before Week 2/3 start |
 | Architecture diagram (React → Gateway → ML → Data) | Web Developer | Before Week 2/3 start |
-
----
 
 *This document reflects only finalized decisions and clearly flagged open questions. It replaces the AI-generated design docs which contained unfinalized content.*
