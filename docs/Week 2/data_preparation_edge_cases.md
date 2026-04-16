@@ -41,7 +41,7 @@
  Same `matchId` mapped to multiple seasons.
  Rows unsorted within innings before cumulative calculations.
  Mixed datatypes in numeric columns.
-52. Infinite values in engineered numeric columns.
+ Infinite values in engineered numeric columns.
 53. NaN introduced by division during normalization.
 54. CSV export truncating float precision.
 55. Hidden duplicate index values after repeats/resetting.

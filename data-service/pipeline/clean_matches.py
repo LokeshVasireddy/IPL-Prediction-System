@@ -25,6 +25,9 @@ def clean_matches():
 
     matches["winner"] = matches["winner"].fillna(matches["eliminator"])
 
+    print("Removing D/L method matches...")
+    matches = matches[matches["method"] != "D/L"]
+
     print("Dropping unnecessary columns...")
     matches.drop(
         [
