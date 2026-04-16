@@ -16,17 +16,24 @@ def clean_deliveries():
     print("Filling missing values...")
     balls["isWide"] = balls["isWide"].fillna(0)
     balls["isNoBall"] = balls["isNoBall"].fillna(0)
-    balls["player_dismissed"] = balls["player_dismissed"].fillna("0")
+    balls["player_dismissed"] = balls["player_dismissed"].fillna("Not Out")
     balls["Byes"] = balls["Byes"].fillna(0)
     balls["LegByes"] = balls["LegByes"].fillna(0)
     balls["Penalty"] = balls["Penalty"].fillna(0)
 
-    print("Creating Batsman runs...")
-    balls["batsman_runs"] = balls["batsman_runs"] + balls["Byes"] + balls["LegByes"]
+    print("Creating Total runs...")
+    balls["total_runs"] = (
+        balls["batsman_runs"]
+        + balls["isWide"]
+        + balls["isNoBall"]
+        + balls["Byes"]
+        + balls["LegByes"]
+        + balls["Penalty"]
+    )
 
     print("Dropping unnecessary columns...")
     balls.drop(
-        ["Byes", "LegByes", "over_ball", "dismissal_kind", "extras"],
+        ["over_ball", "dismissal_kind", "extras"],
         axis=1,
         inplace=True,
         errors="ignore",
@@ -34,10 +41,6 @@ def clean_deliveries():
 
     print("Keeping only innings 1 and 2...")
     balls = balls[balls["inning"].isin([1, 2])].copy()
-
-    print("Properly Calculating..")
-    balls["isWide"] = balls["isWide"] + balls["Penalty"]
-    balls.drop(columns=["Penalty"], inplace=True)
 
     print("Mapping innings...")
     balls["inning"] = balls["inning"].map({1: 0, 2: 1})
