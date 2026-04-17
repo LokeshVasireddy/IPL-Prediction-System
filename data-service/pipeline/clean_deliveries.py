@@ -72,12 +72,18 @@ def clean_deliveries():
         dataset_path=CLEAN_DELIVERIES_PATH,
         raw_sources=[str(RAW_DELIVERIES), str(CLEAN_MATCHES_PATH)],
         preprocessing=[
-            "missing_value_handling",
-            "batsman_runs_creation",
-            "inning_mapping",
-            "washed_match_removal",
-            "sorting",
+            "date_type_conversion",
+            "extras_null_imputation",
+            "dismissal_null_imputation",
+            "total_runs_computation",
+            "column_pruning",
+            "inning_filtering_and_mapping",
+            "type_casting_numeric_fields",
+            "invalid_match_removal_using_clean_matches",
+            "duplicate_removal",
+            "chronological_sorting",
         ],
+        df=balls,
     )
 
 

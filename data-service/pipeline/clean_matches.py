@@ -79,12 +79,16 @@ def clean_matches():
         dataset_path=CLEAN_MATCHES_PATH,
         raw_sources=[str(RAW_MATCHES)],
         preprocessing=[
-            "season_fix",
-            "missing_value_handling",
-            "column_dropping",
-            "date_conversion",
-            "sorting",
+            "season_normalization",
+            "winner_imputation_from_eliminator",
+            "winner_margin_null_fill",
+            "dl_method_removal",
+            "non_result_match_removal",
+            "column_pruning",
+            "date_type_conversion",
+            "chronological_sorting",
         ],
+        df=matches,
     )
 
 
